@@ -1,14 +1,36 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>RailsBlogApi</title>
+    <title>Will Hastings</title>
     <%= csrf_meta_tags %>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/app.css">
   </head>
 
   <body>
+    <header class="site-header">
+      <div class="wrapper">
+        <h1 class="site-header__heading">
+          <a href="/">Will Hastings</a>
+        </h1>
+        <nav class="site-header__nav">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/projects">Projects</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
     <%= yield %>
+
+    <footer class="site-footer">
+      &copy; 2016 Will Hastings
+    </footer>
+
+    <script src="/vendor.js"></script>
+    <script src="/app.js"></script>
   </body>
 </html>
