@@ -23,4 +23,22 @@ RSpec.describe PostSerializer, type: :serializer do
 
     expect(serialized_post[:body]).to eq(serialized_body)
   end
+
+  it "provides preview with body content" do
+    expect(serialized_post[:preview]).to eq(serialized_post[:body])
+  end
+
+  it "provides preview with excerpt of body content if marked" do
+    post.body = <<-BODY.strip_heredoc.strip
+      # Foo Bar
+
+      [PREVIEW]
+      Foo bar baz.
+      [/PREVIEW]
+
+      Qux mux.
+    BODY
+
+    expect(serialized_post[:preview]).to eq("<p>Foo bar baz.</p>\n")
+  end
 end
