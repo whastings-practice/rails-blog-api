@@ -32,4 +32,21 @@ RSpec.describe User, type: :model do
       expect(user.authenticate("foobar")).to be(user)
     end
   end
+
+  describe "associations" do
+    it "has many sessions" do
+      user = build(:user)
+      session = user.sessions.build
+
+      expect(session).to be_truthy
+    end
+
+    it "destroys its session on own destroy" do
+      user = create(:user)
+      session = user.sessions.create
+      user.destroy
+
+      expect(session).to be_destroyed
+    end
+  end
 end
