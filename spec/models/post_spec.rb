@@ -2,9 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Post, type: :model do
   describe "validations" do
-    def expect_field_has_error(model, field)
-      expect(model.errors[field].length).to be(1)
-    end
+    include ModelSpecHelpers
 
     it "requires a title" do
       post = build(:post, title: nil)

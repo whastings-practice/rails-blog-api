@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170102210917) do
+ActiveRecord::Schema.define(version: 20170121201351) do
 
   create_table "posts", force: :cascade do |t|
     t.string   "title",                        null: false
@@ -24,6 +24,14 @@ ActiveRecord::Schema.define(version: 20170102210917) do
     t.index ["permalink"], name: "index_posts_on_permalink", unique: true
     t.index ["published"], name: "index_posts_on_published"
     t.index ["title"], name: "index_posts_on_title", unique: true
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string   "username",        null: false
+    t.string   "password_digest", null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
 end
