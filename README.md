@@ -1,24 +1,7 @@
-# README
+# Rails Blog API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is my practice project for playing around with Ruby on Rails. It's an
+alternate implementation of the API that powers [my blog][blog], which runs on
+Node.js in production.
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+[blog]: http://www.willhastings.me
