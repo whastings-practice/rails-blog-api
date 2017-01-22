@@ -10,4 +10,17 @@ class Api::SessionsController < ApplicationController
       head 403
     end
   end
+
+  def destroy
+    cookies.encrypted[:session_token].try(:tap) do |token|
+      session = Session.find_by(token: token)
+      if session
+        session.destroy!
+        cookies[:session_token] = nil
+        return head 200
+      end
+    end
+
+    head 404
+  end
 end
