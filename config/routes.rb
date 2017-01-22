@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   namespace :api do
     get 'pages/home', to: 'pages#home'
     resources :posts, only: [:index]
+    resource :session, only: [:create, :destroy]
   end
 
   get '*anything' => 'pages#index'
