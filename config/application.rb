@@ -14,5 +14,6 @@ module RailsBlogApi
     # -- all .rb files in that directory are automatically loaded.
 
     config.middleware.use AssetProxy
+    ActiveModelSerializers.config.key_transform = :camel_lower
   end
 end

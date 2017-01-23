@@ -4,9 +4,16 @@ RSpec.describe PostSerializer, type: :serializer do
   let(:post) { build(:post) }
   let(:serialized_post) { ActiveModelSerializers::SerializableResource.new(post).as_json }
 
+  def to_transformed_key(attr)
+    attr_string = attr.to_s.camelize
+    attr_string[0] = attr_string[0].downcase
+    attr_string.to_sym
+  end
+
   it "directly serializes basic attributes" do
     [:id, :title, :permalink, :published, :publish_date, :image_url].each do |attr|
-      expect(serialized_post[attr]).to eq(post.send(attr))
+      key = to_transformed_key(attr)
+      expect(serialized_post[key]).to eq(post.send(attr))
     end
   end
 
