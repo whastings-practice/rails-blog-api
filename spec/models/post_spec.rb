@@ -49,6 +49,15 @@ RSpec.describe Post, type: :model do
       post.published = false
       expect(post).to be_valid
     end
+
+    it "requires a user" do
+      post = build(:post, user: nil)
+      expect(post).to_not be_valid
+      expect_field_has_error(post, :user)
+
+      post.user = build(:user)
+      expect(post).to be_valid
+    end
   end
 
   describe "initialization" do

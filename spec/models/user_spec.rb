@@ -38,7 +38,7 @@ RSpec.describe User, type: :model do
       user = build(:user)
       session = user.sessions.build
 
-      expect(session).to be_truthy
+      expect(session).to be_a(Session)
     end
 
     it "destroys its session on own destroy" do
@@ -47,6 +47,13 @@ RSpec.describe User, type: :model do
       user.destroy
 
       expect(session).to be_destroyed
+    end
+
+    it "has many posts" do
+      user = build(:user)
+      post = user.posts.build
+
+      expect(post).to be_a(Post)
     end
   end
 end
