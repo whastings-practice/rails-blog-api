@@ -1,8 +1,8 @@
 FactoryGirl.define do
   factory :post do
-    title "Post Title"
+    sequence(:title) { |n| "Post Title #{n}"}
     body "Post body."
-    permalink "post-title"
+    sequence(:permalink) { |n| "post-title-#{n}"}
     image_url "http://example.com/example.jpg"
     published true
   end
