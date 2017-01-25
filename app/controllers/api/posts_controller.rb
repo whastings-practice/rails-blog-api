@@ -20,6 +20,18 @@ class Api::PostsController < ApplicationController
     end
   end
 
+  def update
+    post = current_user.posts.find(params[:id])
+
+    if post.update(post_params)
+      render json: post
+    else
+      render json: { errors: post.errors }, status: 422
+    end
+  rescue ActiveRecord::RecordNotFound
+    head 404
+  end
+
   private
 
     def post_params
