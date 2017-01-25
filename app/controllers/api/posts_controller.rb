@@ -3,11 +3,23 @@ require_relative './concerns/authentication_concern'
 class Api::PostsController < ApplicationController
   include Api::AuthenticationConcern
 
-  before_action :require_current_user, except: [:index]
+  before_action :require_current_user, except: [:index, :show]
 
   def index
     posts = Post.all
     render json: posts
+  end
+
+  def show
+    conditions = { id: params[:id] }
+    conditions[:published] = true unless current_user
+    post = Post.find_by(conditions)
+
+    if post
+      render json: post
+    else
+      head 404
+    end
   end
 
   def create

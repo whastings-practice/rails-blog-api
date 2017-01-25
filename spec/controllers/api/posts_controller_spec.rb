@@ -16,7 +16,7 @@ RSpec.describe Api::PostsController, type: :controller do
   end
 
   let(:input) { { title: "Foo Bar", body: "Baz qux" } }
-  let(:new_post) { user.posts.create!(input) }
+  let(:new_post) { user.posts.create!(input.merge(published: true)) }
   let(:user) { create(:user) }
 
   describe "index" do
@@ -31,6 +31,43 @@ RSpec.describe Api::PostsController, type: :controller do
       posts_data.each_with_index do |post_data, i|
         expect_data_for_post(post_data, posts[i])
       end
+    end
+  end
+
+  describe "show" do
+    def view_post(id)
+      get :show, params: { id: id }
+    end
+
+    let(:unpublished_post) { create(:post, published: false) }
+
+    it "returns data for a post" do
+      view_post(new_post.id)
+      post_data = JSON.parse(response.body)
+
+      expect(response.status).to be(200)
+      expect_data_for_post(post_data, new_post)
+    end
+
+    it "returns 404 for a post that does not exist" do
+      view_post(25)
+
+      expect(response.status).to be(404)
+    end
+
+    it "returns 404 if post exists but is not published" do
+      view_post(unpublished_post.id)
+
+      expect(response.status).to be(404)
+    end
+
+    it "returns data for post if post is unpublished and user is signed in" do
+      sign_in(user)
+      view_post(unpublished_post.id)
+
+      expect(response.status).to be(200)
+      post_data = JSON.parse(response.body)
+      expect_data_for_post(post_data, unpublished_post)
     end
   end
 
