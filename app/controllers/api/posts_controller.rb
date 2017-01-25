@@ -32,6 +32,14 @@ class Api::PostsController < ApplicationController
     head 404
   end
 
+  def destroy
+    post = current_user.posts.find(params[:id])
+    post.destroy!
+    head 200
+  rescue ActiveRecord::RecordNotFound
+    head 404
+  end
+
   private
 
     def post_params

@@ -11,6 +11,7 @@ RSpec.describe Api::PostsController, type: :controller do
   end
 
   let(:input) { { title: "Foo Bar", body: "Baz qux" } }
+  let(:new_post) { user.posts.create!(input) }
   let(:user) { create(:user) }
 
   describe "index" do
@@ -62,8 +63,6 @@ RSpec.describe Api::PostsController, type: :controller do
   end
 
   describe "update" do
-    let(:new_post) { user.posts.create!(input) }
-
     it "updates a post and returns its data" do
       sign_in(user)
       input[:body] = "Baz qux biz."
@@ -115,6 +114,39 @@ RSpec.describe Api::PostsController, type: :controller do
       expect(response.status).to be(422)
       expect(new_post.body).to eq(input[:body])
       expect(errors_data["body"][0]).to eq("can't be blank")
+    end
+  end
+
+  describe "destroy" do
+    it "destroys post" do
+      sign_in(user)
+      delete :destroy, params: { id: new_post.id }
+
+      expect(response.status).to be(200)
+      expect(Post.exists?(id: new_post.id)).to be(false)
+    end
+
+    it "does not delete post if user is not signed in" do
+      delete :destroy, params: { id: new_post.id }
+
+      expect(response.status).to be(401)
+      expect(Post.exists?(id: new_post.id)).to be(true)
+    end
+
+    it "returns 404 if post does not exist" do
+      sign_in(user)
+      delete :destroy, params: { id: 50 }
+
+      expect(response.status).to be(404)
+    end
+
+    it "does not destroy post if post does not belong to current user" do
+      sign_in(user)
+      other_new_post = create(:user).posts.create!(input)
+      delete :destroy, params: { id: other_new_post.id }
+
+      expect(response.status).to be(404)
+      expect(Post.exists?(id: other_new_post.id)).to be(true)
     end
   end
 end
