@@ -20,9 +20,22 @@ RSpec.describe Api::PostsController, type: :controller do
   let(:user) { create(:user) }
 
   describe "index" do
+    def expect_no_unpublished(posts_data)
+      expect(posts_data.length).to be(posts.length)
+      expect(
+        posts.none? { |post| post.id == unpublished_post.id }
+      ).to be(true)
+    end
+
+    let!(:posts) do
+      [].tap do |posts|
+        5.times { posts << create(:post) }
+      end
+    end
+
+    let!(:unpublished_post) { create(:post, published: false) }
+
     it "responds with a list of all posts" do
-      posts = []
-      5.times { posts << create(:post) }
       get :index
       posts_data = JSON.parse(response.body)
 
@@ -31,6 +44,37 @@ RSpec.describe Api::PostsController, type: :controller do
       posts_data.each_with_index do |post_data, i|
         expect_data_for_post(post_data, posts[i])
       end
+    end
+
+    it "does not include unpublished posts by default" do
+      get :index
+      posts_data = JSON.parse(response.body)
+
+      expect_no_unpublished(posts_data)
+    end
+
+    it "does include unpublished posts if user signed in and passed query param" do
+      sign_in(user)
+      get :index, params: { includeUnpublished: true }
+      posts_data = JSON.parse(response.body)
+
+      expect(posts_data.length).to be(posts.length + 1)
+      expect_data_for_post(posts_data.last, unpublished_post)
+    end
+
+    it "does not include unpublished posts if user is signed in but no query param" do
+      sign_in(user)
+      get :index
+      posts_data = JSON.parse(response.body)
+
+      expect_no_unpublished(posts_data)
+    end
+
+    it "does not include unpublished posts if query param but user not signed in" do
+      get :index, params: { includeUnpublished: true }
+      posts_data = JSON.parse(response.body)
+
+      expect_no_unpublished(posts_data)
     end
   end
 

@@ -6,7 +6,10 @@ class Api::PostsController < ApplicationController
   before_action :require_current_user, except: [:index, :show]
 
   def index
-    posts = Post.all
+    conditions = {}
+    conditions[:published] = true unless current_user && params[:includeUnpublished]
+    posts = Post.where(conditions)
+
     render json: posts
   end
 
