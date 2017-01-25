@@ -14,7 +14,7 @@ class Api::PostsController < ApplicationController
   end
 
   def show
-    conditions = { id: params[:id] }
+    conditions = { permalink: params[:permalink] }
     conditions[:published] = true unless current_user
     post = Post.find_by(conditions)
 

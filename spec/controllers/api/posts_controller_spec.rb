@@ -79,14 +79,14 @@ RSpec.describe Api::PostsController, type: :controller do
   end
 
   describe "show" do
-    def view_post(id)
-      get :show, params: { id: id }
+    def view_post(permalink)
+      get :show, params: { permalink: permalink }
     end
 
     let(:unpublished_post) { create(:post, published: false) }
 
     it "returns data for a post" do
-      view_post(new_post.id)
+      view_post(new_post.permalink)
       post_data = JSON.parse(response.body)
 
       expect(response.status).to be(200)
@@ -94,20 +94,20 @@ RSpec.describe Api::PostsController, type: :controller do
     end
 
     it "returns 404 for a post that does not exist" do
-      view_post(25)
+      view_post("foo-bar-baz")
 
       expect(response.status).to be(404)
     end
 
     it "returns 404 if post exists but is not published" do
-      view_post(unpublished_post.id)
+      view_post(unpublished_post.permalink)
 
       expect(response.status).to be(404)
     end
 
     it "returns data for post if post is unpublished and user is signed in" do
       sign_in(user)
-      view_post(unpublished_post.id)
+      view_post(unpublished_post.permalink)
 
       expect(response.status).to be(200)
       post_data = JSON.parse(response.body)
