@@ -3,10 +3,15 @@ class PostSerializer < ActiveModel::Serializer
   PREVIEW_START_STR = "[PREVIEW]"
 
   attributes :id, :title, :body, :permalink, :published, :publish_date, :image_url, :preview
+  attribute :body_raw, if: -> { scope && scope[:is_editable] }
 
   def body
     set_body_and_preview
     @body
+  end
+
+  def body_raw
+    object.body
   end
 
   def preview

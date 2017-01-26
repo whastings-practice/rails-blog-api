@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe PostSerializer, type: :serializer do
   let(:post) { build(:post) }
-  let(:serialized_post) { ActiveModelSerializers::SerializableResource.new(post).as_json }
+  let(:serialization_options) { {} }
+  let(:serialized_post) { ActiveModelSerializers::SerializableResource.new(post, serialization_options).as_json }
 
   def to_transformed_key(attr)
     attr_string = attr.to_s.camelize
@@ -47,5 +48,15 @@ RSpec.describe PostSerializer, type: :serializer do
     BODY
 
     expect(serialized_post[:preview]).to eq("<p>Foo bar baz.</p>\n")
+  end
+
+  it "includes raw body if scope indicates post is editable" do
+    serialization_options[:scope] = { is_editable: true }
+
+    expect(serialized_post[:bodyRaw]).to eq(post.body)
+  end
+
+  it "does not include raw body otherwise" do
+    expect(serialized_post[:bodyRaw]).to be_nil
   end
 end
