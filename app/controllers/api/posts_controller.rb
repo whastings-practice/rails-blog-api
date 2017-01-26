@@ -1,5 +1,3 @@
-require_relative './concerns/authentication_concern'
-
 class Api::PostsController < ApplicationController
   include Api::AuthenticationConcern
 
@@ -60,7 +58,7 @@ class Api::PostsController < ApplicationController
   private
 
     def post_params
-      params.require(:post).permit(:title, :body)
+      params.require(:post).permit(:title, :body, :published)
     end
 
     def post_serializer_scope
