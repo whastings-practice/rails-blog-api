@@ -4,7 +4,7 @@ module Api::AuthenticationConcern
   private
 
     def current_user
-      cookies.encrypted[:session_token].try(:tap) do |token|
+      cookies[:session_token].try(:tap) do |token|
         return Session.find_by(token: token).try(:user)
       end
 

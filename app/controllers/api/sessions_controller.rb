@@ -4,7 +4,7 @@ class Api::SessionsController < ApplicationController
 
     if user.try(:authenticate, params[:user][:password])
       session = user.sessions.create!
-      cookies.encrypted[:session_token] = { value: session.token, httponly: true }
+      cookies[:session_token] = { value: session.token, httponly: true }
       render json: session
     else
       head 403
@@ -12,7 +12,7 @@ class Api::SessionsController < ApplicationController
   end
 
   def destroy
-    cookies.encrypted[:session_token].try(:tap) do |token|
+    cookies[:session_token].try(:tap) do |token|
       session = Session.find_by(token: token)
       if session
         session.destroy!
