@@ -79,8 +79,10 @@ RSpec.describe Api::PostsController, type: :controller do
   end
 
   describe "show" do
-    def view_post(permalink)
-      get :show, params: { permalink: permalink }
+    def view_post(permalink, is_editable = false)
+      params = { permalink: permalink }
+      params[:editable] = true if is_editable
+      get :show, params: params
     end
 
     let(:unpublished_post) { create(:post, published: false) }
@@ -112,6 +114,13 @@ RSpec.describe Api::PostsController, type: :controller do
       expect(response.status).to be(200)
       post_data = JSON.parse(response.body)
       expect_data_for_post(post_data, unpublished_post)
+    end
+
+    it "returns post with raw body if passed editable param" do
+      view_post(new_post.permalink, true)
+      post_data = JSON.parse(response.body)
+
+      expect(post_data["bodyRaw"]).to eq(new_post.body)
     end
   end
 

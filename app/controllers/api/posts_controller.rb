@@ -5,6 +5,8 @@ class Api::PostsController < ApplicationController
 
   before_action :require_current_user, except: [:index, :show]
 
+  serialization_scope :post_serializer_scope
+
   def index
     conditions = {}
     conditions[:published] = true unless current_user && params[:includeUnpublished]
@@ -59,5 +61,13 @@ class Api::PostsController < ApplicationController
 
     def post_params
       params.require(:post).permit(:title, :body)
+    end
+
+    def post_serializer_scope
+      @post_serializer_scope ||= begin
+        scope = {}
+        scope[:is_editable] = true if params[:editable]
+        scope
+      end
     end
 end
