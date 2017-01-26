@@ -8,8 +8,8 @@ require 'date'
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-def create_fake_post(attributes = {})
-  Post.create!({
+def create_fake_post(user, attributes = {})
+  user.posts.create!({
     title: Faker::Lorem.sentence(5).titleize,
     body: Faker::Lorem.paragraphs.join("\n\n"),
     published: true,
@@ -18,11 +18,13 @@ def create_fake_post(attributes = {})
 end
 
 ActiveRecord::Base.transaction do
+  user = User.create!(username: "will", password: "foobar")
+
   10.times do
-    create_fake_post
+    create_fake_post(user)
   end
 
   3.times do
-    create_fake_post(published: false, publish_date: nil)
+    create_fake_post(user, published: false, publish_date: nil)
   end
 end
