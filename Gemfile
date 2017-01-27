@@ -39,6 +39,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
   gem 'capybara'
+  gem 'database_cleaner', '~> 1.5', '>= 1.5.3'
   gem 'factory_girl_rails', '~> 4.8'
   gem 'faker', '~> 1.7', '>= 1.7.2'
   gem 'poltergeist'
