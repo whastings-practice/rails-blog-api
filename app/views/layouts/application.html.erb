@@ -2,7 +2,11 @@
 <html>
   <head>
     <title>Will Hastings</title>
-    <%= csrf_meta_tags %>
+    <% if Rails.env.test? %>
+      <meta name="csrf-token" content="foobar">
+    <% else %>
+      <%= csrf_meta_tags %>
+    <% end %>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/app.css">

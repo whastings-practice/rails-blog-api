@@ -12,7 +12,7 @@ class Post < ApplicationRecord
   private
 
     def set_permalink
-      if self.title && self.title.length > 0 && !self.permalink
+      if self.title && self.title.length > 0 && (!self.permalink || title_changed?)
         self.permalink = self.title.downcase.gsub(/\W/, "-")
       end
     end
